@@ -1,0 +1,19 @@
+{
+  "name": "soap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "mix watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "laravel-mix": "^6.0.49"
+  },
+  "dependencies": {
+    "read-excel-file": "^5.4.5"
+  }
+}
