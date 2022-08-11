@@ -12,6 +12,26 @@
     <script src="./js/app.js" defer></script>
 </head>
 <body>
-    <input type="file" id="input" />
+    <div class="container mt-10">
+        <input type="file" id="input"
+            class="file:bg-gray-900 file:text-xl file:text-white file:py-3 file:px-4 block w-full file:text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none" 
+        />
+    </div>
+
+    <div class="container py-10">
+        <table class="table-auto w-full text-start">
+            <thead>
+                <tr>
+                    <th>VAT</th>
+                    <th>Valid</th>
+                    <th>Name</th>
+                    <th>address</th>
+                </tr>
+            </thead>
+            <tbody id="body">
+                
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

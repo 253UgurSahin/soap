@@ -1,8 +1,25 @@
 import readXlsxFile from 'read-excel-file'
 
-function soap() {
+function addToDiv(item) {
+    const body = document.getElementById('body');
+
+    body.innerHTML += `
+        <tr class="even:bg-gray-100 hover:bg-gray-200">
+            <td class="px-2 py-1">${item.countryCode}${item.vatNumber}</td>
+            <td class="px-2 py-1">${item.valid}</td>
+            <td class="px-2 py-1">${item.name}</td>
+            <td class="px-2 py-1">${item.address}</td>
+        </tr>
+    `;
+}
+
+function soap(btw, tags) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'https://cors-anywhere.herokuapp.com/http://ec.europa.eu/taxation_customs/vies/services/checkVatService', true);
+    xmlhttp.open('POST', 'http://ec.europa.eu/taxation_customs/vies/services/checkVatService', true);
+
+    let cc = btw.substring(0, 2);
+    let vat = btw.slice(2);
+    let arr = {};
 
     // build SOAP request
     var sr =`
@@ -10,8 +27,8 @@ function soap() {
         <SOAP-ENV:Header/>
             <ns1:Body>
                 <ns0:checkVat>
-                    <ns0:countryCode>FR</ns0:countryCode>
-                    <ns0:vatNumber>23</ns0:vatNumber>
+                    <ns0:countryCode>${cc}</ns0:countryCode>
+                    <ns0:vatNumber>${vat}</ns0:vatNumber>
                 </ns0:checkVat>
             </ns1:Body>
         </SOAP-ENV:Envelope>
@@ -21,10 +38,12 @@ function soap() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 let xmlDoc = xmlhttp.responseXML;
-                let x = xmlDoc.getElementsByTagName("valid")[0];
-                // let y = x.childNodes[0];
-                // let z = y.nodeValue;
-                console.log(x.textContent);
+                tags.map((tag, i) => {
+                    let res = xmlDoc.getElementsByTagName(tag)[0];
+                    return arr[tag] = res.innerHTML;
+                });
+
+                addToDiv(arr);
             }
         }
     }
@@ -33,25 +52,25 @@ function soap() {
     xmlhttp.send(sr);
 }
 
-
-function readXls() {    
+const readXls = async () => {    
     const input = document.getElementById('input');
 
-    let arr = [];
-
-    input.addEventListener('change', () => {
+    await input.addEventListener('change', () => {
         readXlsxFile(input.files[0]).then((rows) => {
-            console.log(rows.length);
-
-            rows.forEach((row, i) => {
-                arr += row
+            rows.map((row, i) => {
+                soap(row[0], ["countryCode","vatNumber","requestDate","valid","name","address"]);
             });
         })
     });
-
-    console.table(arr);
 }
 
-
 readXls();
+
+
+
+
+
+
+// soap("NL852892275B01", ["countryCode","vatNumber","requestDate","valid","name","address"]);
+
 
